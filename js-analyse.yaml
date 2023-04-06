@@ -2,19 +2,104 @@ id: js-analyse
 
 info:
   name: JS Analyse
-  author: ayadim
+  author: BIZZYLABS.IO
   severity: info
-  description: |
-    This process involves extracting tokens, endpoints, URIs, and variable names from the JS file and analyzing them for any potential weaknesses that could be exploited. By extracting and analyzing these elements, potential security threats can be identified, allowing for proactive measures to be taken to mitigate any risks associated with the application. This process can be used as part of a comprehensive bug-hunting strategy to ensure the security of an application.
-  metadata:
-    verified: "true"
-  tags: file,js-analyse,js,javascript"'
 
 file:
   - extensions:
-      - js'
+      - js
 
     extractors:
+      - type: regex
+        name: GUID
+        regex:
+          - '[A-Z0-9]{8}-([A-Z0-9]{4}-){3}[A-Z0-9]{12}'
+
+      - type: regex
+        name: Service-EndPoints
+        regex:
+          - '^.*\.(svc|SVC|asmx|ASMX)'
+
+      - type: regex
+        name: URLS - x
+        regex:
+          - 'http:'
+
+      - type: regex
+        name: URLS
+        regex:
+          - '(http(s)|ftp)://[a-z0-9]+(.[a-z]+)+'
+
+      - type: regex
+        name: CreditCardNumbers
+        regex:
+          - '[1-9][0-9]{3}-[0-9]{4}-[0-9]{4}-[0-9]{4}'
+
+      - type: regex
+        name: ckeditor-ckfinder
+        regex:
+          - 'ckeditor|ckfinder|fckeditor'
+
+      - type: regex
+        name: PathDisclosure
+        regex:
+          - 'wwwroot|inetpub|var/htm'
+
+      - type: regex
+        name: TestUser
+        regex:
+          - 'testuser|usertest|testtest'
+
+      - type: regex
+        name: Hardcoded Authorization Bearer Header 
+        regex:
+          - 'Authorization: Bearer [A-Fa-f0-9]+'
+
+      - type: regex
+        name: Hardcoded Authorization Basic Heade
+        regex:
+          - 'Authorization: Basic [A-Fa-f0-9]+'
+
+      - type: regex
+        name: Hardcoded Authorization Code
+        regex:
+          - 'AuthorizationCode: \"([A-Za-z0-9]+)\"'
+
+      - type: regex
+        name: SourceMap URL
+        regex:
+          - 'sourceMappingURL=[^:/]+\.map$'
+
+      - type: regex
+        name: Possible hardcoded usernames - 1
+        regex:
+          - 'username: "[A-Za-z0-9\._@]+"'
+
+      - type: regex
+        name: Possible hardcoded usernames - 2
+        regex:
+          - "username: '[A-Za-z0-9\\._@]+'"
+
+      - type: regex
+        name: Possible hardcoded password - 1
+        regex:
+          - 'password: "[A-Za-z0-9\._@]+"'
+
+      - type: regex
+        name: Possible hardcoded password - 2
+        regex:
+          - "password: password: '[A-Za-z0-9\\._@]+'"
+
+      - type: regex
+        name: Local IP Address Detected
+        regex:
+          - '(127(?:\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$)|(10(?:\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$)|(192\.168(?:\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){2}$)|(172\.(?:1[6-9]|2\d|3[0-1])(?:\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){2}$)'
+
+      - type: regex
+        name: ReCaptcha
+        regex:
+          - 'reCaptchakey'
+
       - type: regex
         name: extracted-token
         regex:
